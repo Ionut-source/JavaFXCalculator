@@ -3,6 +3,7 @@ package ro.ctrln.javafx.calculator.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import ro.ctrln.javafx.calculator.operations.Operation;
@@ -22,6 +23,9 @@ public class CalculatorController {
     public Label errorsLabel;
 
     @FXML
+    public SplitPane splitPanel;
+
+    @FXML
     public void writeZero(ActionEvent actionEvent) {
         checkNewOperation();
         if (!calculatorOperationsArea.getText().equalsIgnoreCase("0")) {
@@ -34,10 +38,6 @@ public class CalculatorController {
         calculatorOperationsArea.positionCaret(calculatorOperationsArea.getText().length());
     }
 
-    @FXML
-    public void writeOne(javafx.event.ActionEvent event) {
-        writeDigit("1");
-    }
 
     private void writeDigit(String digit) {
         checkNewOperation();
@@ -57,42 +57,47 @@ public class CalculatorController {
     }
 
     @FXML
-    public void writeTwo(javafx.event.ActionEvent event) {
+    public void writeOne(javafx.event.ActionEvent actionEvent) {
+        writeDigit("1");
+    }
+
+    @FXML
+    public void writeTwo(javafx.event.ActionEvent actionEvent) {
         writeDigit("2");
     }
 
     @FXML
-    public void writeThree(javafx.event.ActionEvent event) {
+    public void writeThree(javafx.event.ActionEvent actionEvent) {
         writeDigit("3");
     }
 
     @FXML
-    public void writeFour(javafx.event.ActionEvent event) {
+    public void writeFour(javafx.event.ActionEvent actionEvent) {
         writeDigit("4");
     }
 
     @FXML
-    public void writeFive(javafx.event.ActionEvent event) {
+    public void writeFive(javafx.event.ActionEvent actionEvent) {
         writeDigit("5");
     }
 
     @FXML
-    public void writeSix(javafx.event.ActionEvent event) {
+    public void writeSix(javafx.event.ActionEvent actionEvent) {
         writeDigit("6");
     }
 
     @FXML
-    public void writeSeven(javafx.event.ActionEvent event) {
+    public void writeSeven(javafx.event.ActionEvent actionEvent) {
         writeDigit("7");
     }
 
     @FXML
-    public void writeEight(javafx.event.ActionEvent event) {
+    public void writeEight(javafx.event.ActionEvent actionEvent) {
         writeDigit("8");
     }
 
     @FXML
-    public void writeNine(javafx.event.ActionEvent event) {
+    public void writeNine(javafx.event.ActionEvent actionEvent) {
         writeDigit("9");
     }
 
@@ -103,7 +108,7 @@ public class CalculatorController {
     }
 
     @FXML
-    public void writeComma(javafx.event.ActionEvent event) {
+    public void writeComma(javafx.event.ActionEvent actionEvent) {
         if (!commaAlreadyPresentOnOperand(calculatorOperationsArea.getText())) {
             calculatorOperationsArea.setText(calculatorOperationsArea.getText().concat("."));
         }
@@ -126,28 +131,28 @@ public class CalculatorController {
     }
 
     @FXML
-    public void addition(javafx.event.ActionEvent event) {
+    public void addition(javafx.event.ActionEvent actionEvent) {
         if (mathOperationsNotPresentOnCalculatorTextArea()) {
             calculatorOperationsArea.setText(calculatorOperationsArea.getText().concat("+"));
         }
     }
 
     @FXML
-    public void subtraction(javafx.event.ActionEvent event) {
+    public void subtraction(javafx.event.ActionEvent actionEvent) {
         if (mathOperationsNotPresentOnCalculatorTextArea()) {
             calculatorOperationsArea.setText(calculatorOperationsArea.getText().concat("-"));
         }
     }
 
     @FXML
-    public void division(javafx.event.ActionEvent event) {
+    public void division(javafx.event.ActionEvent actionEvent) {
         if (mathOperationsNotPresentOnCalculatorTextArea()) {
             calculatorOperationsArea.setText(calculatorOperationsArea.getText().concat("/"));
         }
     }
 
     @FXML
-    public void multiplication(javafx.event.ActionEvent event) {
+    public void multiplication(javafx.event.ActionEvent actionEvent) {
         if (mathOperationsNotPresentOnCalculatorTextArea()) {
             calculatorOperationsArea.setText(calculatorOperationsArea.getText().concat("*"));
         }
@@ -253,22 +258,6 @@ public class CalculatorController {
                 .replaceAll("\n", "")
                 .replaceAll("\r", "")
                 .concat("=").concat(result.toString()));
-    }
-
-    @FXML
-    public void handleKeyType(KeyEvent keyEvent) {
-        if (allowedCharacter(keyEvent.getCharacter())) {
-            //checkNewOperation();
-
-            handleDigitCharacter(keyEvent);
-            handleComma(keyEvent);
-            handleOperations(keyEvent);
-            handleEvaluationsKeys(keyEvent);
-
-        } else {
-            keyEvent.consume();
-
-        }
 
     }
 
@@ -295,42 +284,6 @@ public class CalculatorController {
     }
 
     private void handleDigitCharacter(KeyEvent keyEvent) {
-        if (isDigitCharacter(keyEvent.getCharacter())) {
-
-            switch (keyEvent.getCharacter()) {
-                case "0":
-                    writeZero(new ActionEvent());
-                    break;
-                case "1":
-                    writeOne(new ActionEvent());
-                    break;
-                case "2":
-                    writeTwo(new ActionEvent());
-                    break;
-                case "3":
-                    writeThree(new ActionEvent());
-                    break;
-                case "4":
-                    writeFour(new ActionEvent());
-                    break;
-                case "5":
-                    writeFive(new ActionEvent());
-                    break;
-                case "6":
-                    writeSix(new ActionEvent());
-                    break;
-                case "7":
-                    writeSeven(new ActionEvent());
-                    break;
-                case "8":
-                    writeEight(new ActionEvent());
-                    break;
-                case "9":
-                    writeNine(new ActionEvent());
-                    break;
-            }
-            keyEvent.consume();
-        }
     }
 
     private List<String> allowedCharacters = Arrays
@@ -350,5 +303,69 @@ public class CalculatorController {
 
     private boolean isDigitCharacter(String character) {
         return digitCharacters.contains(character);
+    }
+
+    @FXML
+    public void handleKeyTyped(KeyEvent keyEvent) {
+        if (allowedCharacter(keyEvent.getCharacter())) {
+//            checkNewOperation();
+
+            if (isDigitCharacter(keyEvent.getCharacter())) {
+
+                switch (keyEvent.getCharacter()) {
+                    case "0":
+                        writeZero(new ActionEvent());
+                        break;
+                    case "1":
+                        writeOne(new ActionEvent());
+                        break;
+                    case "2":
+                        writeTwo(new ActionEvent());
+                        break;
+                    case "3":
+                        writeThree(new ActionEvent());
+                        break;
+                    case "4":
+                        writeFour(new ActionEvent());
+                        break;
+                    case "5":
+                        writeFive(new ActionEvent());
+                        break;
+                    case "6":
+                        writeSix(new ActionEvent());
+                        break;
+                    case "7":
+                        writeSeven(new ActionEvent());
+                        break;
+                    case "8":
+                        writeEight(new ActionEvent());
+                        break;
+                    case "9":
+                        writeNine(new ActionEvent());
+                        break;
+                }
+                keyEvent.consume();
+
+
+                if (keyEvent.getCharacter().equalsIgnoreCase(".")) {
+                    writeComma((new ActionEvent()));
+                    keyEvent.consume();
+                }
+
+                if (operationCharacter(keyEvent.getCharacter())) {
+                    if (!mathOperationsNotPresentOnCalculatorTextArea()) {
+                        keyEvent.consume();
+                    }
+                }
+
+                if (keyEvent.getCharacter().equalsIgnoreCase("=") || keyEvent.getCharacter().equalsIgnoreCase("\r")) {
+                    keyEvent.consume();
+                    evaluate(new ActionEvent());
+
+                }
+            } else {
+                keyEvent.consume();
+            }
+        }
     }
 }
